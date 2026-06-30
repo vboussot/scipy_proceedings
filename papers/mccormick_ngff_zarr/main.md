@@ -35,8 +35,8 @@ cloud-ready: they are difficult to stream, to share, and to align with FAIR
 (Findable, Accessible, Interoperable, Reusable) principles. This friction
 directly hinders reproducible, collaborative science.
 
-The bioimaging community has converged on an answer. OME-Zarr — created by the
-OME-NGFF, Open Microscopy Environment Next-Generation File Format, community — is a
+The bioimaging community has converged on an answer. OME-Zarr, created by the
+OME-NGFF, Open Microscopy Environment Next-Generation File Format, community, is a
 community-driven, open standard for storing bioimaging data in the cloud
 [@moore2021ngff; @moore2023omezarr]. Built on Zarr's chunked, compressed,
 n-dimensional array storage [@zarr], OME-Zarr stores images as multiscale
@@ -70,7 +70,7 @@ Rather than a single monolithic file, an OME-Zarr dataset is a hierarchy of
 chunked, compressed arrays accompanied by JSON metadata [@ome-zarr-spec]. Three
 properties make it well suited to modern data. It is **chunked and compressed**,
 so a client can read a small region of a large image without downloading the
-whole dataset — the foundation of cloud-optimized access. It is **multiscale**,
+whole dataset, the foundation of cloud-optimized access. It is **multiscale**,
 storing each image as a singular scale or as a pyramid of progressively downsampled
 resolutions for responsive visualization and scale-appropriate analysis. And it is
 **self-describing**: axis names, types, units, and coordinate transformations
@@ -129,8 +129,8 @@ loaded or computed until they are needed.
 `to_multiscales` builds a Dask task graph that will produce a chunked,
 multiscale image pyramid. It accepts optional `scale_factors` and `chunks`
 parameters and an antialiasing `method`. The returned `NgffMultiscales`
-dataclass holds the image for each scale together with the OME-Zarr metadata —
-axes, datasets, and coordinate transformations — and the correct `scale` and
+dataclass holds the image for each scale together with the OME-Zarr metadata,
+axes, datasets, and coordinate transformations, and the correct `scale` and
 `translation` for each downsampled level are computed automatically. Because the
 result is still a lazy task graph, building the multiscales is inexpensive; the
 work happens only when the store is written.
@@ -194,7 +194,7 @@ executes lazily and out-of-core: chunks are streamed through the graph and
 written incrementally rather than materialized all at once. This is what allows
 `ngff-zarr` to process datasets that exceed available memory. By convention a
 local directory store uses the `.ome.zarr` extension, but any Zarr store type
-may be used — including remote object stores on S3, Google Cloud Storage, or
+may be used, including remote object stores on S3, Google Cloud Storage, or
 Azure via `fsspec`, with no local filesystem required. OME-Zarr version 0.4
 (Zarr Format Specification 2) and 0.5 (Zarr Format Specification 3) are
 supported on write, and versions 0.1 through 0.5 can be read.
@@ -234,8 +234,7 @@ ngff-zarr --memory-target 50M -i LIDCFull.vtk -o LIDCFull.ome.zarr
 A directory-based Zarr store can comprise thousands of small files, which is
 awkward to copy, share, or archive. RFC-9 [@rfc9] introduces the OME-Zarr Zip
 format, which packages an entire OME-Zarr hierarchy into a single ZIP archive
-with the `.ozx` extension. `ngff-zarr` reads and writes `.ozx` transparently —
-the extension is detected automatically — and embeds the OME-Zarr version in the
+with the `.ozx` extension. `ngff-zarr` reads and writes `.ozx` transparently: the extension is detected automatically, and the OME-Zarr version is embedded in the
 ZIP comment for reliable detection on read. For large datasets,
 `write_store_to_zip` copies an existing store directly into a `.ozx` archive
 without recomputing arrays.
@@ -252,8 +251,8 @@ each spatial axis so that images can be aligned to atlases and to one another.
 RFC-4 [@rfc4] adds anatomical orientation metadata to OME-NGFF axes. `ngff-zarr`
 emits this metadata when RFC-4 is enabled, either programmatically via
 `enabled_rfcs=[4]` in `to_ngff_zarr` or with the `--enable-rfc 4` flag on the
-command line. When converting ITK or ITK-Wasm images — for example from NRRD,
-NIfTI, or DICOM inputs — anatomical orientation is derived automatically from
+command line. When converting ITK or ITK-Wasm images, for example from NRRD,
+NIfTI, or DICOM inputs, anatomical orientation is derived automatically from
 ITK's LPS (Left-Posterior-Superior) coordinate system [@itk], with convenience
 constants provided for both the LPS and the neuroimaging RAS conventions.
 
@@ -266,10 +265,10 @@ nz.to_ngff_zarr("output.ome.zarr", multiscales, enabled_rfcs=[4])
 The most significant recent addition is emerging support for RFC-5, which
 provides first-class coordinate systems and transformations in OME-Zarr and is
 the centerpiece of the version 0.6 [@rfc5]. RFC-5 introduces named
-coordinate systems (sets of axes) and a richer vocabulary of transformations —
+coordinate systems (sets of axes) and a richer vocabulary of transformations,
 including identity, axis permutation and projection, translation, scale, affine, rotation,
 sequences of transformations, and field-based displacement and coordinate
-transforms — that map points between coordinate systems. This enables datasets
+transforms that map points between coordinate systems. This enables datasets
 to express the spatial relationships between multiple images, such as aligned
 tiles or registered modalities, in a standardized, machine-readable way without
 resampling and re-saving pixel data.
@@ -307,7 +306,7 @@ outputs, Zarr v3 sharding stores multiple compressed chunks in a single file or
 blob, reducing file counts; sharding is requested with the `chunks_per_shard`
 argument and requires OME-Zarr version 0.5 or newer. An optional Tensorstore
 backend can further improve write performance. For batch and scripting
-workflows, the CLI mirrors the library — a basic conversion is a single command,
+workflows, the CLI mirrors the library: a basic conversion is a single command,
 and omitting the output prints information about the input and the multiscales
 that would be generated.
 
@@ -361,7 +360,7 @@ Several directions are planned. On the specification side, we intend to extend
 support for additional community RFCs: **RFC-3** (support for additional dimensions) [@rfc3] for smoother interoperability with more image types, and **RFC-8** (collections) [@rfc8] for grouping related
 OME-Zarr datasets. We will continue maturing **RFC-5** coordinate-transformation
 support to directly support common use cases, and align releases with the community's
-**OME-Zarr 1.0** milestone — a stable, long-term-supported version of the
+**OME-Zarr 1.0** milestone, a stable, long-term-supported version of the
 format. Alongside these features, we plan ongoing **performance improvements**,
 including faster downscaling and writing, better memory-aware scheduling, and
 expanded GPU acceleration. As an open-source project, `ngff-zarr` welcomes
@@ -370,8 +369,8 @@ community contributions toward these goals.
 ## Conclusion
 
 `ngff-zarr` is a lean, minimal-dependency, and community-aligned implementation
-of the OME-Zarr specification. Its four-step pipeline — array to `NgffImage` to
-`NgffMultiscales` to store — gives researchers a simple, lazy, parallel, and
+of the OME-Zarr specification. Its four-step pipeline, from array to `NgffImage` to
+`NgffMultiscales` to store, gives researchers a simple, lazy, parallel, and
 web-ready path from in-memory data to a cloud-native bioimaging dataset, while
 out-of-core execution via Dask makes datasets larger than memory routine. Beyond
 the core pipeline, support for `.ozx` single-file archives, RFC-4 anatomical
